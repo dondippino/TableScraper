@@ -1,0 +1,29 @@
+{
+  "name": "scrape-ncdc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "cli-table": "^0.3.1",
+    "object-hash": "^2.0.3",
+    "objects-to-csv": "^1.3.6",
+    "promise": "^8.1.0",
+    "psl": "^1.8.0",
+    "puppeteer": "^3.0.2",
+    "readline-promise": "^1.0.4",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
+    "rimraf": "^3.0.2",
+    "rimraf-promise": "^2.0.0",
+    "rmfr": "^2.0.0",
+    "rxjs": "^6.5.5",
+    "rxjs-compat": "^6.5.5"
+  }
+}
