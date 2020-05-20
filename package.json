@@ -20,6 +20,7 @@
     "cli-table": "^0.3.1",
     "concat-stream": "^2.0.0",
     "cross-spawn": "^7.0.2",
+    "lint": "^0.7.0",
     "mocha": "^7.1.2",
     "mock-stdin": "^1.0.0",
     "nexpect": "^0.6.0",
