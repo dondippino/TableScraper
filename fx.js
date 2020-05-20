@@ -13,7 +13,6 @@ const readline = require("readline-promise").default;
 const rimraf = require('rimraf-promise');
 const ObjectsToCsv = require('objects-to-csv');
 var Promise = require('promise');
-const cmd = require('./cmd');
 
 
 
