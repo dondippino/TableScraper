@@ -2,6 +2,9 @@ const { setUpReadLine, getDatafromURL, extractTableHTMLtoObject, saveToArchive, 
 
 (async () => {
     let rl = await setUpReadLine();
+    rl.on("close", function () { // callback for catching 'close' event of prompt
+        process.exit(0);
+    });
     let url = await requestForUrl(rl);
     let identifier = await requestForIdentifier(rl);
     let $ = await getDatafromURL(url);

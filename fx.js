@@ -35,11 +35,6 @@ exports.setUpReadLine = () => {
                 output: process.stdout
             });
 
-
-            rl.on("close", function () { // callback for catching 'close' event of prompt
-                process.exit(0);
-            });
-
             resolve(rl);
         } catch (error) {
             reject(error);

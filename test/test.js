@@ -6,14 +6,14 @@ jest.setTimeout(30000);
 
 let url;
 let identifier;
+let rl;
 describe('Testing the prompts', function () {
 
-    beforeEach(() => {
-
+    beforeAll(async () => {
+        rl = await setUpReadLine();
     });
     it('checks and validates the input url', async (done) => {
         try {
-            let rl = await setUpReadLine();
             process.nextTick(() => {
                 rl.write('http://data.mock-server.ext/with-th\n');
             });
@@ -29,7 +29,6 @@ describe('Testing the prompts', function () {
 
     it('checks and validates the input identifier', async (done) => {
         try {
-            let rl = await setUpReadLine();
             process.nextTick(() => {
                 rl.write('#identifier\n');
             });
@@ -43,11 +42,14 @@ describe('Testing the prompts', function () {
 
     });
 
+    afterAll(async () => {
+
+    });
 
 });
 
 describe('Testing extraction of data from HTML table', function () {
-    beforeAll(() => {
+    beforeAll(async () => {
         nock('http://data.mock-server.ext')
             .get('/with-th')
             .delay({
@@ -101,8 +103,6 @@ describe('Testing extraction of data from HTML table', function () {
     });
     it('checks to see the object generated from the HTML table with header columns - th, is correct', async (done) => {
         try {
-
-            let rl = await setUpReadLine();
             let $ = await getDatafromURL(url);
             process.nextTick(() => {
                 rl.write('0\n');
@@ -114,15 +114,11 @@ describe('Testing extraction of data from HTML table', function () {
         } catch (error) {
             done(error);
         }
-
-
     });
 
     it('checks to see the object generated from the HTML table without header columns - th, is correct', async (done) => {
         try {
-
-            url = 'http://data.mock-server.ext/without-th'
-            let rl = await setUpReadLine();
+            url = 'http://data.mock-server.ext/without-th';
             let $ = await getDatafromURL(url);
             process.nextTick(() => {
                 rl.write('0\n');
@@ -130,13 +126,16 @@ describe('Testing extraction of data from HTML table', function () {
             let extractedObject = await extractTableHTMLtoObject($, rl, identifier);
             const expectedObject = { 'John': { 'Column_0': 'John', 'Column_1': 22 }, 'Jane': { 'Column_0': 'Jane', 'Column_1': 21 } };
             expect(extractedObject).toEqual(expectedObject);
+
             done();
+            rl.close();
         } catch (error) {
             done(error);
         }
 
 
     });
-
-
+    afterAll(async () => {
+        
+    });
 });
