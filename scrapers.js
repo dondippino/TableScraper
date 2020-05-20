@@ -1,17 +1,17 @@
-const { setUp, getDatafromURLandTransform, saveToArchive, interactWithUser, generateMutation } = require('./fx.js');
+const { setUpReadLine, getDatafromURL, extractTableHTMLtoObject, saveToArchive, interactWithUser, generateMutation, requestForUrl, requestForIdentifier } = require('./fx.js');
 
-setUp().subscribe(() => {
-    getDatafromURLandTransform().subscribe((x) => {
-        saveToArchive(x).subscribe((o) => {
-            interactWithUser(x).subscribe((rl) => {
-                if (rl.b) {
-                    generateMutation(x, rl.a).subscribe((h) => {
-                    });
-                } else {
-                    rl.a.close();
-                }
-            });
+(async () => {
+    let rl = await setUpReadLine();
+    let url = await requestForUrl(rl);
+    let identifier = await requestForIdentifier(rl);
+    let $ = await getDatafromURL(url);
+    let extractedObject = await extractTableHTMLtoObject($, rl, identifier);
+    await saveToArchive(extractedObject, url);
+    let isLatest = await interactWithUser(extractedObject, rl);
+    if (isLatest) {
+        generateMutation(extractedObject, rl, url).then((h) => {
         });
-    });
-});
-
+    } else {
+        rl.close();
+    }
+})();
