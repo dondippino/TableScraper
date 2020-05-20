@@ -1,6 +1,7 @@
-const { setUpReadLine, getDatafromURL, extractTableHTMLtoObject, saveToArchive, interactWithUser, generateMutation, requestForUrl, requestForIdentifier } = require('./fx.js');
+const { setUpDataDirs, setUpReadLine, getDatafromURL, extractTableHTMLtoObject, saveToArchive, interactWithUser, generateMutation, requestForUrl, requestForIdentifier } = require('./fx.js');
 
 (async () => {
+    await setUpDataDirs();
     let rl = await setUpReadLine();
     rl.on("close", function () { // callback for catching 'close' event of prompt
         process.exit(0);

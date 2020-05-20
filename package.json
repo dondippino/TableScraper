@@ -23,6 +23,7 @@
     "cross-spawn": "^7.0.2",
     "eslint": "^7.0.0",
     "lint": "^0.7.0",
+    "mkdirp": "^1.0.4",
     "mocha": "^7.1.2",
     "mock-stdin": "^1.0.0",
     "nexpect": "^0.6.0",

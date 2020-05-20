@@ -13,12 +13,34 @@ const readline = require("readline-promise").default;
 const rimraf = require('rimraf-promise');
 const ObjectsToCsv = require('objects-to-csv');
 var Promise = require('promise');
+const mkdirp = require('mkdirp')
 
 
 
 exports.url = ""; // URL of page to be scraped
 exports.identifier = ""; // Identifier of the table element in the DOM of the page
 exports.uniqueColumn = ""; // The column containing the unique values by which the table is indexed
+
+
+/**
+ * @description This function creates the directories for the generated data, 
+ * @author Olabosinde Oladipo Olabosindeoladipo@gmail.com
+ * @requires mkdirp
+ */
+
+exports.setUpDataDirs = async () => {
+    var mades = [];
+    
+    let made1 = await mkdirp('./archive/current');
+    let made2 = await mkdirp('./archive/data');
+    let made3 = await mkdirp('./archive/mutations');
+
+    mades.push(made1);
+    mades.push(made2);
+    mades.push(made3);
+
+    return mades;
+}
 
 /**
  * @description The readline prompt is created, 
