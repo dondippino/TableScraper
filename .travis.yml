@@ -1,0 +1,13 @@
+sudo: false
+
+languauge: node_js
+
+node_js:
+    - 12
+
+install:
+    - npm ci
+
+script:
+    - npm run lint
+    - npm run test:coveralls
