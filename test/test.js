@@ -83,7 +83,7 @@ describe('Testing the prompts', function () {
 });
 
 describe('Testing extraction of data from HTML table', function () {
-    beforeAll(async () => {
+    beforeEach(async () => {
         nock('http://data.mock-server.ext')
             .get('/with-th')
             .delay({
@@ -162,12 +162,22 @@ describe('Testing extraction of data from HTML table', function () {
             expect(extractedObject).toEqual(expectedObject);
 
             done();
-            // rl.close();
         } catch (error) {
             done(error);
         }
+    });
 
 
+    it('checks to see that jQuery (cheerio) has been added', async (done) => {
+        try {
+            url = 'http://data.mock-server.ext/with-th';
+            let $ = await getDatafromURL(url);
+            var tableLength = $('table').length
+            expect(tableLength).toEqual(1);
+            done();
+        } catch (error) {
+            done(error);
+        }
     });
     afterAll(async () => {
 
