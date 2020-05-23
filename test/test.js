@@ -1,8 +1,17 @@
 const nock = require('nock');
+const fs = require('fs');
+const path = require('path');
+const hash = require('object-hash');
+const rimraf = require('rimraf-promise');
 
-const { setUpReadLine, getDatafromURL, extractTableHTMLtoObject, saveToArchive, interactWithUser, generateMutation, requestForUrl, requestForIdentifier } = require('../fx.js');
+
+const { setUpDataDirs, setUpReadLine, getDatafromURL, extractTableHTMLtoObject, saveToArchive, interactWithUser, generateMutation, requestForUrl, requestForIdentifier, extractHostname } = require('../fx.js');
 jest.setTimeout(30000);
 
+const FAKE_ARCHIVE = './fake_archive';
+const CURRENT_DIR = './fake_archive/current';
+const DATA_DIR = './fake_archive/data';
+const MUTATIONS_DIR = './fake_archive/mutations';
 
 let url;
 let identifier;
@@ -128,7 +137,7 @@ describe('Testing extraction of data from HTML table', function () {
             expect(extractedObject).toEqual(expectedObject);
 
             done();
-            rl.close();
+            // rl.close();
         } catch (error) {
             done(error);
         }
@@ -136,6 +145,34 @@ describe('Testing extraction of data from HTML table', function () {
 
     });
     afterAll(async () => {
-        
+
+    });
+});
+
+describe('Testing persistence of files to the archive directory', function () {
+    beforeAll(async () => {
+
+    });
+    it('checks to see if file was saved to the archive', async (done) => {
+        try {
+            await rimraf(FAKE_ARCHIVE);
+            await setUpDataDirs(CURRENT_DIR, DATA_DIR, MUTATIONS_DIR);
+            let url = 'http://data.mock-server.ext/with-th';
+            let extractedObject = { 'John': { 'Name': 'John', 'Age': 22 }, 'Jane': { 'Name': 'Jane', 'Age': 21 } };
+            await saveToArchive(extractedObject, url, DATA_DIR);
+            var expectedHashedFile = path.join(`${DATA_DIR}/`, extractHostname(url) + '_' + hash(extractedObject));
+            // expect(fs.existsSync(expectedHashedFile)).toBe(true);
+            const data = fs.readFileSync(expectedHashedFile, 'utf8');
+            expect(JSON.parse(data)).toEqual(extractedObject);
+            await rimraf(FAKE_ARCHIVE);
+            done();
+            rl.close();
+        } catch (error) {
+            done(error);
+        }
+    });
+
+    afterAll(async () => {
+
     });
 });

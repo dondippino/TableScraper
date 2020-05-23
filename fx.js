@@ -28,12 +28,12 @@ exports.uniqueColumn = ""; // The column containing the unique values by which t
  * @requires mkdirp
  */
 
-exports.setUpDataDirs = async () => {
+exports.setUpDataDirs = async (CURRENT_DIR, DATA_DIR, MUTATIONS_DIR) => {
     var mades = [];
-    
-    let made1 = await mkdirp('./archive/current');
-    let made2 = await mkdirp('./archive/data');
-    let made3 = await mkdirp('./archive/mutations');
+
+    let made1 = await mkdirp(CURRENT_DIR);
+    let made2 = await mkdirp(DATA_DIR);
+    let made3 = await mkdirp(MUTATIONS_DIR);
 
     mades.push(made1);
     mades.push(made2);
@@ -222,10 +222,10 @@ exports.extractTableHTMLtoObject = async ($, rl, identifier) => {
   * @returns Promise
 */
 
-exports.saveToArchive = (mainObject, url) => {
+exports.saveToArchive = (mainObject, url, DATA_DIR) => {
 
     //  Create a unique means of identification for the extracted data by hashing the object
-    var hashedFile = path.join('./archive/data/', exports.extractHostname(url) + '_' + hash(mainObject));
+    var hashedFile = path.join(`${DATA_DIR}/`, exports.extractHostname(url) + '_' + hash(mainObject));
     subject.next('Attemmpting to save report to the archive ...');
 
     return new Promise((resolve) => {
@@ -326,20 +326,20 @@ calculateMutation2 = (schema2, schema1) => {
   * @returns object
 */
 
-exports.generateMutation = (mainObject, readLineObject, url) => {
+exports.generateMutation = (mainObject, readLineObject, url, CURRENT_DIR, MUTATIONS_DIR) => {
     return new Promise((resolve, reject) => {
-        var files = fs.readdirSync('./archive/current');
-        if (fs.existsSync(`./archive/current/${exports.extractHostname(url) + '_' + hash(mainObject)}`)) {
+        var files = fs.readdirSync(CURRENT_DIR);
+        if (fs.existsSync(`${CURRENT_DIR}/${exports.extractHostname(url) + '_' + hash(mainObject)}`)) {
             subject.next('The current version is up to date  ...');
             readLineObject.close();
             return;
         }
         try {
-            var currentFile = path.join('./archive/current/', exports.extractHostname(url) + '_' + hash(mainObject));
-            var existingCurrentFile = `archive/current/${exports.extractHostname(url) + '_*'}`;
+            var currentFile = path.join(`${CURRENT_DIR}/`, exports.extractHostname(url) + '_' + hash(mainObject));
+            var existingCurrentFile = `${CURRENT_DIR}/${exports.extractHostname(url) + '_*'}`;
             if (files.filter(fn => fn.startsWith(exports.extractHostname(url) + '_')).length > 0) {
 
-                const data = fs.readFileSync(path.join('./archive/current/', files.filter(fn => fn.startsWith(exports.extractHostname(url) + '_'))[0]), 'utf8');
+                const data = fs.readFileSync(path.join(`${CURRENT_DIR}/`, files.filter(fn => fn.startsWith(exports.extractHostname(url) + '_'))[0]), 'utf8');
 
                 // Calculate the difference
                 var mutation = calculateMutation(mainObject, JSON.parse(data));
@@ -349,12 +349,12 @@ exports.generateMutation = (mainObject, readLineObject, url) => {
                 var date = new Date();
                 var mutant_file_name = exports.extractHostname(url) + '_' + date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + '-' + Date.now();
 
-                fs.writeFile('./archive/mutations/' + mutant_file_name, JSON.stringify(mutation), function (err) {
+                fs.writeFile(`${MUTATIONS_DIR}/` + mutant_file_name, JSON.stringify(mutation), function (err) {
                     if (err) return console.log(err);
                     //Convert to csv and save also to mutation folder
                     const csv = new ObjectsToCsv(Object.values(mutation));
                     // const csv = new ObjectsToCsv(mutation);
-                    csv.toDisk('./archive/mutations/' + mutant_file_name + '.csv');
+                    csv.toDisk(`${MUTATIONS_DIR}/` + mutant_file_name + '.csv');
                     subject.next('Mutant File saved successfully ...');
 
                     rimraf(existingCurrentFile).then(() => {
