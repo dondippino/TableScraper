@@ -180,7 +180,7 @@ exports.extractTableHTMLtoObject = async ($, rl, identifier) => {
     console.table(columns);
     let uniqueColumn = await rl.questionAsync("\nSelect the unique column by which the data will be indexed [0]: ");
     exports.uniqueColumn = uniqueColumn || 0;
-    if (!(/^\d+$/.test(exports.uniqueColumn)) || parseInt(exports.uniqueColumn) >= columns.length || parseInt(exports.uniqueColumn) < 0) {
+    if (!(/^-?\d+$/.test(exports.uniqueColumn)) || parseInt(exports.uniqueColumn) >= columns.length || parseInt(exports.uniqueColumn) < -1) {
         subject.next('Input must be in the range of (index) as shown above ...');
         subject.next('Aborting, please try again ...');
         rl.close();
@@ -204,8 +204,11 @@ exports.extractTableHTMLtoObject = async ($, rl, identifier) => {
             a[columns[c]] = parseFloat(b) == b ? parseFloat(b) : b.trim();
             return a;
         }, {});
-        mainObject[item[exports.uniqueColumn].trim()] = obj;
-        // mainObject.push(obj);
+        if (exports.uniqueColumn === '-1') {
+            mainObject[index] = obj;
+        } else {
+            mainObject[item[exports.uniqueColumn].trim()] = obj;
+        }
     });
     subject.next('Extraction completed ...');
     return mainObject;
