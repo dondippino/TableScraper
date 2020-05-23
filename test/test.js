@@ -166,6 +166,46 @@ describe('Testing persistence of files to the archive directory', function () {
             expect(JSON.parse(data)).toEqual(extractedObject);
             await rimraf(FAKE_ARCHIVE);
             done();
+        } catch (error) {
+            done(error);
+        }
+    });
+
+
+
+    afterAll(async () => {
+
+    });
+});
+
+describe('Testing the prompts to make current report the latest', function () {
+    beforeAll(async () => {
+
+    });
+
+    it('tests the prompt for making the current report the latest', async (done) => {
+        try {
+            let extractedObject = { 'John': { 'Name': 'John', 'Age': 22 }, 'Jane': { 'Name': 'Jane', 'Age': 21 } };
+            process.nextTick(() => {
+                rl.write('y\n');
+            });
+            let isLatest = await interactWithUser(extractedObject, rl);
+            expect(isLatest).toEqual(true);
+            done();
+        } catch (error) {
+            done(error);
+        }
+    });
+
+    it('tests the prompt for not making the current report the latest', async (done) => {
+        try {
+            let extractedObject = { 'John': { 'Name': 'John', 'Age': 22 }, 'Jane': { 'Name': 'Jane', 'Age': 21 } };
+            process.nextTick(() => {
+                rl.write('n\n');
+            });
+            let isLatest = await interactWithUser(extractedObject, rl);
+            expect(isLatest).toEqual(false);
+            done();
             rl.close();
         } catch (error) {
             done(error);
