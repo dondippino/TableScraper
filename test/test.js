@@ -16,10 +16,35 @@ const MUTATIONS_DIR = './fake_archive/mutations';
 let url;
 let identifier;
 let rl;
+
+
+describe('Testing setup of readline', function () {
+    beforeAll(async () => {
+        rl = await setUpReadLine();
+    });
+
+    it('tests the success of creating readline object', async (done) => {
+        try {
+            process.nextTick(() => {
+                rl.write('OK\n');
+            });
+            let answer = await rl.questionAsync('Testing readline...');
+            expect(answer).toEqual('OK');
+            done();
+        } catch (error) {
+            done(error);
+        }
+    });
+
+    afterAll(async () => {
+
+    });
+});
+
 describe('Testing the prompts', function () {
 
     beforeAll(async () => {
-        rl = await setUpReadLine();
+
     });
     it('checks and validates the input url', async (done) => {
         try {
@@ -205,6 +230,30 @@ describe('Testing the prompts to make current report the latest', function () {
             });
             let isLatest = await interactWithUser(extractedObject, rl);
             expect(isLatest).toEqual(false);
+            done();
+
+        } catch (error) {
+            done(error);
+        }
+    });
+
+    afterAll(async () => {
+
+    });
+});
+
+
+describe('Testing creation of directories', function () {
+    beforeAll(async () => {
+
+    });
+
+    it('tests the success of creating data directories', async (done) => {
+        try {
+            await setUpDataDirs(CURRENT_DIR, DATA_DIR, MUTATIONS_DIR);
+            var allCreated = fs.existsSync(CURRENT_DIR) && fs.existsSync(DATA_DIR) && fs.existsSync(MUTATIONS_DIR);
+            expect(allCreated).toEqual(true);
+            await rimraf(FAKE_ARCHIVE);
             done();
             rl.close();
         } catch (error) {
