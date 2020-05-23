@@ -31,5 +31,6 @@ The identifier is simply the id, class or any other valid ***CSS3 selector*** of
 Enter the number matching the selected column fromm the displayed columns, or simply enter -1 to use a serial index
 At this point the data extracted from the table will be saved in the ***archive/data*** directory, if it is not already there.
 
-5. The final prompt then asks if you wish to make this data its most recent version, it accepts a case insensitive response of ***'Y'*** or ***'N'***. If Y is entered the 'archive/current' directory is cleared of old data and the new data is saved as the current version in ***'archive/current'*** directory.
+5. The final prompt then asks if you wish to make this data its most recent version, it accepts a case insensitive response of ***'Y'*** or ***'N'***. If Y is entered the 'archive/current' directory is cleared of old data and the new data is saved as the current version in ***'archive/current'*** directory. 
+The currrent version of the data is compared to its previous version, and a mutation (if any) is generated and saved in ***'archive/mutations'*** directory.
 ![]()
