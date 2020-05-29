@@ -344,7 +344,7 @@ exports.generateMutation = (mainObject, readLineObject, url, CURRENT_DIR, MUTATI
                 const data = fs.readFileSync(path.join(`${CURRENT_DIR}/`, files.filter(fn => fn.startsWith(exports.extractHostname(url) + '_'))[0]), 'utf8');
 
                 // Calculate the difference
-                var mutation = calculateMutation(JSON.parse(data), mainObject);
+                var mutation = exports.calculateMutation(JSON.parse(data), mainObject);
 
 
                 // Save json to mutation folder
