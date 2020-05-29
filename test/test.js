@@ -167,6 +167,17 @@ describe('Testing extraction of data from HTML table', function () {
         }
     });
 
+    // it('checks to see the object generated from the HTML table without data - tr, is correct', async (done) => {
+    //     try {
+    //         url = 'http://data.mock-server.ext/without-tr';
+    //         let $ = await getDatafromURL(url);
+    //         let extractedObject = await extractTableHTMLtoObject($, rl, identifier);
+    //         expect({}).toEqual(extractedObject);
+    //         done();
+    //     } catch (error) {
+    //         done(error);
+    //     }
+    // });
 
     it('checks to see that jQuery (cheerio) has been added', async (done) => {
         try {

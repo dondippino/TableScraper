@@ -283,16 +283,16 @@ exports.interactWithUser = (mainObject, rl) => {
 /** 
   * @desc This function calculates the difference between two similar objects
   * @author Olabosinde Oladipo Olabosindeoladipo@gmail.com
-  * @param schema1
-  * @param schema2
+  * @param new_version
+  * @param old_version
   * @returns object
 */
 
-calculateMutation = (schema2, schema1) => {
+calculateMutation = (old_version, new_version) => {
     var ret = {};
-    for (var key in schema1) {
-        var obj = schema1[key];
-        var obj2 = schema2[key]
+    for (var key in new_version) {
+        var obj = new_version[key];
+        var obj2 = old_version[key]
         if (typeof obj === "number" && !isNaN(obj) && typeof obj2 === "number" && !isNaN(obj2)) {
             ret[key] = obj - obj2;
         }
@@ -311,13 +311,13 @@ calculateMutation = (schema2, schema1) => {
 /** 
   * @desc This function calculates the difference between two similar array
   * @author Olabosinde Oladipo Olabosindeoladipo@gmail.com
-  * @param schema1
-  * @param schema2
+  * @param new_version
+  * @param old_version
   * @returns array
 */
 
-calculateMutation2 = (schema2, schema1) => {
-    return schema2.map(function (v, i) { return (v - schema1[i]); });
+calculateMutation2 = (old_version, new_version) => {
+    return old_version.map(function (v, i) { return (v - new_version[i]); });
 }
 
 /** 
@@ -345,7 +345,7 @@ exports.generateMutation = (mainObject, readLineObject, url, CURRENT_DIR, MUTATI
                 const data = fs.readFileSync(path.join(`${CURRENT_DIR}/`, files.filter(fn => fn.startsWith(exports.extractHostname(url) + '_'))[0]), 'utf8');
 
                 // Calculate the difference
-                var mutation = calculateMutation(mainObject, JSON.parse(data));
+                var mutation = calculateMutation(JSON.parse(data), mainObject);
 
 
                 // Save json to mutation folder
