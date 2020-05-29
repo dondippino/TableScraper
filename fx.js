@@ -288,17 +288,16 @@ exports.interactWithUser = (mainObject, rl) => {
   * @returns object
 */
 
-calculateMutation = (old_version, new_version) => {
+exports.calculateMutation = (old_version, new_version) => {
     var ret = {};
     for (var key in new_version) {
         var obj = new_version[key];
         var obj2 = old_version[key]
         if (typeof obj === "number" && !isNaN(obj) && typeof obj2 === "number" && !isNaN(obj2)) {
             ret[key] = obj - obj2;
-        }
-        else {
+        } else {
             if (typeof obj === 'object' && typeof obj2 === 'object') {
-                ret[key] = calculateMutation(obj, obj2);
+                ret[key] = exports.calculateMutation(obj2, obj);
             }
             else {
                 ret[key] = obj;

@@ -5,7 +5,7 @@ const hash = require('object-hash');
 const rimraf = require('rimraf-promise');
 
 
-const { setUpDataDirs, setUpReadLine, getDatafromURL, extractTableHTMLtoObject, saveToArchive, interactWithUser, generateMutation, requestForUrl, requestForIdentifier, extractHostname } = require('../fx.js');
+const { setUpDataDirs, setUpReadLine, getDatafromURL, extractTableHTMLtoObject, saveToArchive, interactWithUser, generateMutation, requestForUrl, requestForIdentifier, extractHostname, calculateMutation } = require('../fx.js');
 jest.setTimeout(30000);
 
 const FAKE_ARCHIVE = './fake_archive';
@@ -257,6 +257,21 @@ describe('Testing the prompts to make current report the latest', function () {
             done(error);
         }
     });
+
+    it('tests the calculateMutation function', async (done) => {
+        try {
+            let newVersion = { 'Apple': { 'Item': 'Apple', 'Price': 4000 }, 'Orange': { 'Item': 'Orange', 'Price': 5000 }, 'Pear': { 'Item': 'Pear', 'Price': 2500 } };
+            let oldVersion = { 'Apple': { 'Item': 'Apple', 'Price': 3800 }, 'Orange': { 'Item': 'Orange', 'Price': 4950 } };
+            let expectedAnswer = { 'Apple': { 'Item': 'Apple', 'Price': 200 }, 'Orange': { 'Item': 'Orange', 'Price': 50 }, 'Pear': { 'Item': 'Pear', 'Price': 2500 } };
+            let recievedAnswer = calculateMutation(oldVersion, newVersion);
+            expect(recievedAnswer).toEqual(expectedAnswer);
+            done();
+
+        } catch (error) {
+            done(error);
+        }
+    });
+
 
     afterAll(async () => {
 
